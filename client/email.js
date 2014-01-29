@@ -23,8 +23,6 @@ Template.email.events = {
                 $('#emailModal').modal('hide');
             }
 
-
         });
-
     }
 }
