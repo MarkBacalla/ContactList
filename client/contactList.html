@@ -1,0 +1,48 @@
+
+<template name="contactList">
+    <div class="container">
+        <div class="col-md-2">
+            {{> tagList}}
+        </div>
+        <div class="col-md-10">
+        {{#each contacts}}
+            {{> contactCard}}
+        {{/each}}
+        </div>
+    </div>
+</template>
+
+
+<template name="contactCard">
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{name}}            
+        </div>
+        <div class="panel-body">
+            <b>{{name}}</b><br/>
+            {{email}}            
+            <br/>
+            {{#if tags}}
+            <div>
+                <hr />
+                 <b>Tags</b><br/>
+                {{#each tags}}
+                    <span class="tag">{{this}}</span>
+                {{/each}}
+            </div>
+            {{/if}}
+        </div>
+        
+    </div>    
+</div>
+</template>
+
+<template name="tagList">
+    <h3>Tags</h3>
+    <ul class="list-unstyled">
+        {{#each allTags}}
+            <li><span class="glyphicon glyphicon-tag"></span> {{this}}</li>
+        {{/each}}
+    </ul>
+</template>
