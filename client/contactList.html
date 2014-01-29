@@ -5,9 +5,15 @@
             {{> tagList}}
         </div>
         <div class="col-md-10">
-        {{#each contacts}}
-            {{> contactCard}}
-        {{/each}}
+            <div class="buttonCommands">            
+                <a href="{{ pathFor 'contact' }}" class="btn btn-primary">Add Contact</a>
+            </div>
+            {{#each contacts}}
+                {{> contactCard}}
+            {{else }}
+                <br /><br />
+                <h4>Contact List Empty</h4>            
+            {{/each}}
         </div>
     </div>
 </template>

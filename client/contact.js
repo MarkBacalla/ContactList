@@ -5,11 +5,15 @@ Template.tags.events = {
     "submit": function (e, tmpl) {
         e.preventDefault();
 
-        var newTag = tmpl.find('#tag').value.trim();
+        // get value of tag
+        var tagControl = tmpl.find('#tag');
+        var newTag = tagControl.value.trim();
         if (newTag) {
             var currentTags = Session.get('currentTags');
             currentTags.push(newTag);
             Session.set('currentTags', currentTags);
+
+            tagControl.value = "";
         }
 
     }
@@ -25,19 +29,25 @@ Template.tags.currentTags = function() {
 Template.addContact.events = {
 
     "submit #contactForm": function(e, tmpl) {
+        var emailControl = tmpl.find("#email");
+        var nameControl = tmpl.find("#name");
         e.preventDefault();
 
         var newContact = {
-            email: tmpl.find("#email").value,
-            name: tmpl.find("#name").value,
+            email: emailControl.value,
+            name: nameControl.value,
             tags: Session.get('currentTags')
         };
 
         Meteor.call("addContact", newContact, function (err, result) {
             if (err) 
                 alert("Could not insert contact " + err.reason);
-            else
+            else {
                 alert("User Inserted!");
+                emailControl.value = "";
+                nameControl.value = "";
+            }
+
         })
 
     }
