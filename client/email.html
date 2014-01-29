@@ -1,0 +1,46 @@
+<template name="email">
+
+<!-- Modal -->
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">New Message</h4>
+      </div>
+      <div class="modal-body">
+        
+      {{> emailContent}}
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Send</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+</template>
+
+<template name="emailContent">
+<form class="form-horizontal emailForm">
+
+    <div class="form-group">
+        <label for="inputEmail" class="col-sm-2 control-label">To</label>
+        <div class="col-sm-10">
+            <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputSubject" class="col-sm-2 control-label">Subject</label>
+        <div class="col-sm-10">
+            <input class="form-control" id="inputSubject" placeholder="Subject">
+        </div>
+    </div>
+    <div>
+        <textarea class="form-control" rows="8"></textarea>
+    </div>
+
+</form>
+</template>
