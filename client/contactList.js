@@ -1,3 +1,4 @@
+Session.set('currentContact', {});
 
 Template.contactList.contacts = function() {
     return Contacts.find({}, { sort: {name:1}});
@@ -18,3 +19,11 @@ Template.tagList.allTags = function() {
     return tags;
 
 }
+
+Template.contactCard.events = {
+
+    "click .sendEmail": function (e, tmpl) {        
+        Session.set('currentContact', this);
+        $('#emailModal').modal("show");
+    }
+};

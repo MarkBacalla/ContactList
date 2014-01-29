@@ -29,9 +29,10 @@ Template.tags.currentTags = function() {
 Template.addContact.events = {
 
     "submit #contactForm": function(e, tmpl) {
+        e.preventDefault();
+        
         var emailControl = tmpl.find("#email");
         var nameControl = tmpl.find("#name");
-        e.preventDefault();
 
         var newContact = {
             email: emailControl.value,
