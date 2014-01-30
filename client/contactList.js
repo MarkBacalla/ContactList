@@ -12,6 +12,7 @@ Template.contactList.contacts = function() {
                     .pluck('tags')
                     .compact()
                     .flatten()
+                    .uniq()
                     .value()
                     .sort();
     Session.set('allTags', tags);
@@ -22,6 +23,11 @@ Template.contactList.contacts = function() {
             return _.intersection(item.tags, searchTags).length > 0; 
         });
     } 
+
+    // sort string case insensitive
+    contactList = _(contactList).sortBy(function (contact) {
+        return contact.name.toLowerCase();
+    });
 
     return contactList;
 }
