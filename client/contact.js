@@ -16,7 +16,14 @@ Template.tags.events = {
             tagControl.value = "";
         }
 
+    },
+
+    "click button": function () {
+        
+        var currentTags = _.without(Session.get('currentTags'), this.toString());
+        Session.set('currentTags', currentTags);
     }
+
 }
 
 
@@ -40,19 +47,30 @@ Template.contact.events = {
             name: nameControl.value,
             tags: Session.get('currentTags')
         };
-debugger;
+
+        // insert/update Contact
         Meteor.call("addContact", contact, function (err, result) {
             if (err) 
-                alert("Could not insert contact " + err.reason);
+                alert("Could not insert/update contact " + err.reason);
             else {
-                alert("User Inserted!");
-                emailControl.value = "";
-                nameControl.value = "";
+                
+                if (result.insertedId) {
+                    alert("User Inserted!");
+                    
+                    // reset controls
+                    emailControl.value = "";
+                    nameControl.value = "";
+                    Session.set('currentTags', []);
+                } else {
+                    alert("User updated!")
+                }
+
             }
 
-        })
+        });
 
     }
+
 }
 
 

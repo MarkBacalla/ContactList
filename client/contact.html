@@ -42,9 +42,10 @@
             <input id="tag" class="form-control">
         </div>
     </form>
-    <ul>
+    <ul class="list-unstyled" style="line-height: 1.5em">
         {{#each currentTags}}
-        <li>{{this}}</li>
+        <!-- <li>{{this}}</li> -->
+        <li class="tag" style="margin-bottom: 0.2em"><button type="button" class="close pull-left" aria-hidden="true">&times;</button>{{this}}</li>
         {{/each}}
         
     </ul>
