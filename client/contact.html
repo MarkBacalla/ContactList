@@ -10,6 +10,7 @@
         {{> contactInfo }}
         </div>
         <div class="col-md-3 col-md-offset-2">
+            <!-- XXX We are embedding a form within a form here. This also throws jquery validation errors when typing into the #id input after trying to submit the contact form without all the information. Needs to be refactored into separate forms. -->
             {{> tags}}
         </div>
 

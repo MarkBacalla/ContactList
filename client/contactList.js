@@ -5,10 +5,15 @@ Session.set('allTags', []);
 
 
 Template.contactList.contacts = function() {
+    // XXX We can actually use a mongo selector to filter contacts by
+    // the tags they have, check out the $in operator
     var contactList = Contacts.find({}, { sort: {name:1}}).fetch();    
     var searchTags = Session.get('searchTags');
 
     // cache all tags
+    // XXX There is a better place to create this tag list.
+    // Imagine that we needed to re-use this list in many screens.
+    // Excellent use of underscore though.
     var tags = _.chain(contactList)
                     .pluck('tags')
                     .compact()

@@ -8,6 +8,8 @@ Template.email.events = {
         var contact = Session.get('currentContact');
         
         var email = {
+            // XXX This should probably be the userId of the
+            // person sending the email.
             userId: contact.userId,
             to: contact,
             subject: tmpl.find('#inputSubject').value,

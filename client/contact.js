@@ -1,3 +1,4 @@
+// XXX - To talk about, file local variables using ReactiveDict
 Session.set('currentTags', []);
 
 Template.tags.events = {
@@ -47,6 +48,9 @@ Template.contact.events = {
             name: nameControl.value,
             tags: Session.get('currentTags')
         };
+
+        // XXX Let's save a round trip and not even contact the server
+        // if we know that the info the user provided is incomplete
 
         // insert/update Contact
         Meteor.call("addContact", contact, function (err, result) {
