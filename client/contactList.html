@@ -6,7 +6,7 @@
         </div>
         <div class="col-md-9">
             <div class="buttonCommands">            
-                <a href="{{ pathFor 'contact' }}" class="btn btn-primary">Add Contact</a>&nbsp;&nbsp;
+                <!-- <a href="{{ pathFor 'contact' }}" class="btn btn-primary">Add Contact</a>&nbsp;&nbsp; -->
                 {{> tagSearchList}}
             </div>
             {{#each contacts}}
@@ -29,7 +29,7 @@
 
 <template name="contactCard">
 <div class="col-md-4">
-    <div class="panel panel-default">
+    <div class="panel panel-default contact-card">
         <div class="panel-heading">
             {{name}}            
         </div>

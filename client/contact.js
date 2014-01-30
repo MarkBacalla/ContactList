@@ -26,7 +26,7 @@ Template.tags.currentTags = function() {
 
 
 
-Template.addContact.events = {
+Template.contact.events = {
 
     "submit #contactForm": function(e, tmpl) {
         e.preventDefault();
@@ -34,13 +34,14 @@ Template.addContact.events = {
         var emailControl = tmpl.find("#email");
         var nameControl = tmpl.find("#name");
 
-        var newContact = {
+        var contact = {
+            _id: this._id,
             email: emailControl.value,
             name: nameControl.value,
             tags: Session.get('currentTags')
         };
-
-        Meteor.call("addContact", newContact, function (err, result) {
+debugger;
+        Meteor.call("addContact", contact, function (err, result) {
             if (err) 
                 alert("Could not insert contact " + err.reason);
             else {
@@ -55,7 +56,7 @@ Template.addContact.events = {
 }
 
 
-Template.addContact.rendered = function () {
+Template.contact.rendered = function () {
     $("#contactForm").validate({        
         highlight: function(element) {
             $(element).closest('.form-group').removeClass('has-success').addClass('has-error');

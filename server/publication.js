@@ -21,7 +21,7 @@ Contacts.deny ({
 
     update: function(userId, contact, fieldNames, modifier) {
         
-        return true
+        return true;
     }
 });
 

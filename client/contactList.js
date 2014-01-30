@@ -41,9 +41,17 @@ Template.tagList.allTags = function() {
 Template.contactCard.events = {
 
     "click .sendEmail": function (e, tmpl) {        
+        e.preventDefault();
+        e.stopPropagation();
+
         Session.set('currentContact', this);
         $('#emailModal').modal("show");
-    }   
+    },
+
+    "click .contact-card": function (e, tmpl) {
+        
+        Router.go('contact', {id: this._id});
+    }
 };
 
 Template.tagList.events = {
@@ -82,3 +90,4 @@ Template.tagSearchList.events = {
         Session.set('searchTags', _(searchTags).without(remove));
     }
 };
+
