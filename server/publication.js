@@ -1,5 +1,5 @@
 // Publications
-Meteor.publish('contacts', function () {
+Meteor.publish('contacts', function () {    
     return Contacts.find({ userId: this.userId }, { sort: { name: 1 }});
 });
 

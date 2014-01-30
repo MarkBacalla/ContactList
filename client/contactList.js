@@ -3,6 +3,7 @@ Session.set('searchTags', []);
 Session.set('allTags', []);
 
 
+
 Template.contactList.contacts = function() {
     var contactList = Contacts.find({}, { sort: {name:1}}).fetch();    
     var searchTags = Session.get('searchTags');

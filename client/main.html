@@ -10,17 +10,33 @@
     {{> header}}
 
     {{#if currentUser}}
-      {{> addContact}}
+      {{#if verifiedEmail}}
+        {{> addContact}}
+      {{else}}
+        {{> verifyEmail}}
+      {{/if}}
     {{/if}}
 </template>
-
+ 
 
 <template name="contacts">
     {{> header}}
     
     {{#if currentUser}}
-      {{> contactList}}  
+      {{#if verifiedEmail}}
+        {{> contactList}}  
+      {{else}}
+        {{> verifyEmail}}
+      {{/if}}
     {{/if}}  
+</template>
+
+<template name="verifyEmail">
+<div class="container">
+  <div class="alert alert-danger">
+    An email has been sent to your account. <b>Please Verify</b> to proceed. Thank You!!!
+  </div>
+</div>
 </template>
 
 <template name="header">
