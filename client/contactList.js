@@ -19,9 +19,10 @@ Template.contactList.contacts = function() {
     Session.set('allTags', tags);
 
 
+    // filter if there is a SearchTag
     if (searchTags.length) {
         contactList = _(contactList).filter(function(item) {
-            return _.intersection(item.tags, searchTags).length > 0; 
+            return _.difference(searchTags, item.tags).length === 0; 
         });
     } 
 
@@ -59,7 +60,7 @@ Template.tagList.events = {
         
         var searchTags = Session.get('searchTags');
         searchTags.push(this.toString());
-        Session.set('searchTags', searchTags);
+        Session.set('searchTags', _.uniq(searchTags));
     },
 
     "submit #search": function (e, tmpl) {
