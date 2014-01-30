@@ -10,11 +10,9 @@ Meteor.publish('emails', function () {
 
 // Allowed/Denied Operations
 Contacts.deny ({
-    insert: function(userId, contact) {
-        // deny if not logged in and userId of contact is not current userId
-        //return (!userId || contact.userId !== userId);
-        console.log(contact.name);
-        return true;
+    insert: function(userId, contact) {        
+        // insert via Method.addContact    
+        return (!userId || contact.userId !== userId);
     },
 
     remove: function() {
@@ -23,7 +21,7 @@ Contacts.deny ({
 
     update: function(userId, contact, fieldNames, modifier) {
         
-        return (!userId || contact.userId !== userId);
+        return true
     }
 });
 
