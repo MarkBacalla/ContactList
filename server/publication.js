@@ -1,9 +1,6 @@
 // XXX Love how simple the publications are here, excellent.
 // Publications
 Meteor.publish('contacts', function () {    
-    // XXX Just FYI - results sent from the server are not guaranteed 
-    // to be sorted when they arrive at the client - so no sort here.
-    // - remove sort
     return Contacts.find({ userId: this.userId });
 });
 

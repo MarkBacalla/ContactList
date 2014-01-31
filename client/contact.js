@@ -14,7 +14,7 @@ var Contact = function (id, name, email, tags) {
         if (!this.email || !this.name) {
             if (!this.email)
                 err.push('Email Field Required!');
-            if (!contact.name)
+            if (!this.name)
                 err.push('Name Field Required!');
         }
 
@@ -125,7 +125,7 @@ Template.contact.events = {
                 }
             },
 
-            fail: alert
+            fail: alert.bind(null)
         });        
     }
 

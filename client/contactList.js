@@ -4,27 +4,11 @@ Session.set('allTags', []);
 
 
 Template.contactList.contacts = function() {
-    // XXX We can actually use a mongo selector to filter contacts by
-    // the tags they have, check out the $in operator
     var searchTags = Session.get('searchTags');
 
     // search tags if exist or get all
     var criteria = searchTags.length ? { tags: { $in: searchTags }} : {};
     var contactList = Contacts.find(criteria, { sort: {name:1}}).fetch();    
-
-    // cache all tags
-    // XXX There is a better place to create this tag list.
-    // Imagine that we needed to re-use this list in many screens.
-    // Excellent use of underscore though.
-    // var tags = _.chain(contactList)
-    //                 .pluck('tags')
-    //                 .compact()
-    //                 .flatten()
-    //                 .uniq()
-    //                 .value()
-    //                 .sort();
-    // Session.set('allTags', tags);
-
 
     // filter if there is a SearchTag
     if (searchTags.length) {
@@ -43,7 +27,7 @@ Template.contactList.contacts = function() {
 
 
 Template.tagList.allTags = function() {    
-    return Session.get('allTags');
+    return _.difference(Session.get('allTags'), Session.get('searchTags')) ;
 }
 
 Template.contactCard.events = {
