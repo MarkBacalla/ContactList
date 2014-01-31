@@ -68,20 +68,22 @@ Session.set('currentTags', []);
 
 Template.tags.events = {
 
-    "submit": function (e, tmpl) {
-        e.preventDefault();
+    "keypress #tag": function (e, tmpl) {
+        if (e.keyCode == 13) {
+            e.preventDefault();
 
-        // get value of tag
-        var tagControl = tmpl.find('#tag');
-        var newTag = tagControl.value.trim();
-        if (newTag) {
-            var currentTags = Session.get('currentTags');
-            currentTags.push(newTag);
-            Session.set('currentTags', currentTags);
+            // get value of tag
+            var tagControl = tmpl.find('#tag');
+            var newTag = tagControl.value.trim();
+            if (newTag) {
+                var currentTags = Session.get('currentTags');
+                currentTags.push(newTag);
+                Session.set('currentTags', _.uniq(currentTags));
 
-            tagControl.value = "";
+                tagControl.value = "";
+            }
+
         }
-
     },
 
     "click button": function () {        
