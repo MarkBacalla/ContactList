@@ -1,2 +1,6 @@
-Meteor.subscribe("contacts");
-Meteor.subscribe("emails");
+ 
+ if (Meteor.userId()) {
+
+	Meteor.subscribe("contacts");
+	Meteor.subscribe("emails");
+}

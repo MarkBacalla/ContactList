@@ -7,8 +7,11 @@ Session.set('allTags', []);
 Template.contactList.contacts = function() {
     // XXX We can actually use a mongo selector to filter contacts by
     // the tags they have, check out the $in operator
-    var contactList = Contacts.find({}, { sort: {name:1}}).fetch();    
     var searchTags = Session.get('searchTags');
+
+    // search tags if exist or get all
+    var criteria = searchTags.length ? { tags: { $in: searchTags }} : {};
+    var contactList = Contacts.find(criteria, { sort: {name:1}}).fetch();    
 
     // cache all tags
     // XXX There is a better place to create this tag list.

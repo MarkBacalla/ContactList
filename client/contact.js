@@ -1,3 +1,68 @@
+'use strict';
+
+var Contact = function (id, name, email, tags) {
+    
+    this._id = id;
+    this.name = name;
+    this.email = email;
+    this.tags = tags;
+
+    this.validate = function() {
+        var err = [];
+
+        // check for required
+        if (!this.email || !this.name) {
+            if (!this.email)
+                err.push('Email Field Required!');
+            if (!contact.name)
+                err.push('Name Field Required!');
+        }
+
+        return err.join('\n');        
+    };
+
+    this.save = function (callbackSave) {
+        // validate
+        var err = this.validate();
+        if (err) {
+            callbackSave.fail (err);
+            return;
+        }
+
+        // get contactinfo
+        var contactToSave = _(this).pick('name', 'email', 'tags')
+        contactToSave.userId = Meteor.userId();
+        
+        // update?
+        if (this._id) {                        
+            Contacts.update({_id: this._id}, {$set: contactToSave}, callback.bind(this));
+        } else {                        
+            Contacts.insert(contactToSave, callback.bind(this));
+        }
+
+        function callback (err, result) {
+            if (err) {
+                callback.fail("Could not insert/update contact " + err.reason);
+            }
+            else {
+                // success!
+                if (!this._id) {
+                    Session.set('currentTags', []);
+                    callbackSave.success("User Inserted!");
+                    
+                                        
+                } else {
+                    callbackSave.success("User updated!")
+                }
+            }
+
+        }
+
+
+    }
+};
+
+
 // XXX - To talk about, file local variables using ReactiveDict
 Session.set('currentTags', []);
 
@@ -19,18 +84,17 @@ Template.tags.events = {
 
     },
 
-    "click button": function () {
-        
-        var currentTags = _.without(Session.get('currentTags'), this.toString());
-        Session.set('currentTags', currentTags);
+    "click button": function () {        
+        Session.set('currentTags', 
+            _.without(Session.get('currentTags'), this.toString()));         
     }
 
-}
+};
 
 
 Template.tags.currentTags = function() {
     return Session.get('currentTags');
-}
+};
 
 
 
@@ -38,48 +102,36 @@ Template.contact.events = {
 
     "submit #contactForm": function(e, tmpl) {
         e.preventDefault();
+        var _this = this;
         
         var emailControl = tmpl.find("#email");
         var nameControl = tmpl.find("#name");
 
-        var contact = {
-            _id: this._id,
-            email: emailControl.value,
-            name: nameControl.value,
-            tags: Session.get('currentTags')
-        };
-
-        // XXX Let's save a round trip and not even contact the server
-        // if we know that the info the user provided is incomplete
-
-        // insert/update Contact
-        Meteor.call("addContact", contact, function (err, result) {
-            if (err) 
-                alert("Could not insert/update contact " + err.reason);
-            else {
+        var contact = new Contact(_this._id, 
+                            nameControl.value.trim(),
+                            emailControl.value.trim(),
+                            Session.get('currentTags')
+            );
+        contact.save({
+            success: function(msg) {
+                alert(msg);
                 
-                if (result.insertedId) {
-                    alert("User Inserted!");
-                    
+                if (!_this._id) {
                     // reset controls
                     emailControl.value = "";
                     nameControl.value = "";
-                    Session.set('currentTags', []);
-                } else {
-                    alert("User updated!")
                 }
+            },
 
-            }
-
-        });
-
+            fail: alert
+        });        
     }
 
 }
 
 
 Template.contact.rendered = function () {
-    $("#contactForm").validate({        
+    $("#contactForm").validate({
         highlight: function(element) {
             $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
         },
@@ -91,5 +143,5 @@ Template.contact.rendered = function () {
         // errorPlacement: function (error, element) {
         //     error.appendTo(element.parent().next());
         // }
-    }); 
-}
+    });
+};

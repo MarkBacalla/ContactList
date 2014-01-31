@@ -1,9 +1,10 @@
 // XXX Love how simple the publications are here, excellent.
 // Publications
 Meteor.publish('contacts', function () {    
-    // XXX Just FYI - results sent from the server are not guaranteed
+    // XXX Just FYI - results sent from the server are not guaranteed 
     // to be sorted when they arrive at the client - so no sort here.
-    return Contacts.find({ userId: this.userId }, { sort: { name: 1 }});
+    // - remove sort
+    return Contacts.find({ userId: this.userId });
 });
 
 Meteor.publish('emails', function () {
@@ -12,10 +13,17 @@ Meteor.publish('emails', function () {
 
 // XXX Great use of allow/deny rules, thank you!
 // Allowed/Denied Operations
+
+//------------ Contacts
 Contacts.deny ({
     insert: function(userId, contact) {        
         // insert via Method.addContact    
-        return (!userId || contact.userId !== userId);
+        // validate - deny if (no userid, not currentUser, blank name and email)
+        var result = !userId  
+                        || contact.userId !== userId
+                        || !contact.name.trim()
+                        || !contact.email.trim()
+        return result;
     },
 
     remove: function() {
@@ -24,10 +32,24 @@ Contacts.deny ({
 
     update: function(userId, contact, fieldNames, modifier) {
         
-        return true;
+        var result = !userId
+                    || _(fieldNames).contains("_id");
+        return result;
     }
 });
 
+Contacts.allow({
+    insert: function(userId, contact) {
+        return true;
+    },
+
+    update: function() {
+        return true;
+    }
+
+});
+
+//------------ Emails
 Emails.deny({
 
     insert: function(userId, email) {
@@ -42,4 +64,10 @@ Emails.deny({
         return true;
     }
 
+});
+
+Emails.allow({
+    insert: function(userId, email) {
+        return true;
+    }
 });
