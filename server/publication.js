@@ -24,23 +24,26 @@ Contacts.deny ({
     },
 
     remove: function() {
+        // XXX this rule is not good enough, who is allowed to do this?
         return true;
     },
 
     update: function(userId, contact, fieldNames, modifier) {
-        
+        // XXX this rule is not good enough, who is allowed to do this?
         var result = !userId
                     || _(fieldNames).contains("_id");
         return result;
     }
 });
 
+// XXX With your deny rules, this block is not necessary.
 Contacts.allow({
     insert: function(userId, contact) {
         return true;
     },
 
     update: function() {
+
         return true;
     }
 
@@ -54,15 +57,18 @@ Emails.deny({
     },
 
     remove: function () {
+        // XXX this rule is not good enough, who is allowed to do this?
         return true;
     },
 
     update: function() {
+        // XXX this rule is not good enough, who is allowed to do this?
         return true;
     }
 
 });
 
+// XXX With your deny rules, this block is not necessary.
 Emails.allow({
     insert: function(userId, email) {
         return true;
