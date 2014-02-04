@@ -10,7 +10,6 @@
         {{> contactInfo }}
         </div>
         <div class="col-md-3 col-md-offset-2">
-            <!-- XXX We are embedding a form within a form here. This also throws jquery validation errors when typing into the #id input after trying to submit the contact form without all the information. Needs to be refactored into separate forms. -->
             {{> tags}}
         </div>
 
@@ -41,11 +40,9 @@
         <label>Add Tag</label>
         <input id="tag" class="form-control">
     </div>
-    <!-- XXX We NEVER want to have CSS inside the HTML, classes are fine, styles are not -->
-    <ul class="list-unstyled" style="line-height: 1.5em">
-        {{#each currentTags}}
-        <!-- <li>{{this}}</li> -->
-        <li class="tag" style="margin-bottom: 0.2em"><button type="button" class="close pull-left" aria-hidden="true">&times;</button>{{this}}</li>
+    <ul class="list-unstyled">
+        {{#each tags}}
+        <li class="tag taglist"><button type="button" class="close pull-left" aria-hidden="true">&times;</button>{{this}}</li>
         {{/each}}
         
     </ul>

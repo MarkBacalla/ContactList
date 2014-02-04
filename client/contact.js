@@ -64,8 +64,6 @@ var Contact = function (id, name, email, tags) {
 
 
 // XXX - To talk about, file local variables using ReactiveDict
-Session.set('currentTags', []);
-
 Template.tags.events = {
 
     "keypress #tag": function (e, tmpl) {
@@ -75,29 +73,22 @@ Template.tags.events = {
             // get value of tag
             var tagControl = tmpl.find('#tag');
             var newTag = tagControl.value.trim();
-            if (newTag) {
-                var currentTags = Session.get('currentTags');
-                currentTags.push(newTag);
-                Session.set('currentTags', _.uniq(currentTags));
-
+            if (newTag) {                
+                this.tags.push(newTag);
                 tagControl.value = "";
             }
 
         }
     },
 
-    "click button": function () {        
-        Session.set('currentTags', 
-            _.without(Session.get('currentTags'), this.toString()));         
+    "click button": function (e, tmpl) {
+        var tag = this.toString();
+        var contact = tmpl.data;
+
+        contact.tags.splice(contact.tags.indexOf(tag), 1);
     }
 
 };
-
-
-Template.tags.currentTags = function() {
-    return Session.get('currentTags');
-};
-
 
 
 Template.contact.events = {
@@ -142,8 +133,5 @@ Template.contact.rendered = function () {
             .text('OK!').addClass('valid')
             .closest('.form-group').removeClass('has-error').addClass('has-success');
         }
-        // errorPlacement: function (error, element) {
-        //     error.appendTo(element.parent().next());
-        // }
     });
 };

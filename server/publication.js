@@ -10,67 +10,24 @@ Meteor.publish('emails', function () {
 
 // XXX Great use of allow/deny rules, thank you!
 // Allowed/Denied Operations
-
-//------------ Contacts
-Contacts.deny ({
-    insert: function(userId, contact) {        
-        // insert via Method.addContact    
-        // validate - deny if (no userid, not currentUser, blank name and email)
-        var result = !userId  
-                        || contact.userId !== userId
-                        || !contact.name.trim()
-                        || !contact.email.trim()
-        return result;
-    },
-
-    remove: function() {
-        // XXX this rule is not good enough, who is allowed to do this?
-        return true;
-    },
-
-    update: function(userId, contact, fieldNames, modifier) {
-        // XXX this rule is not good enough, who is allowed to do this?
-        var result = !userId
-                    || _(fieldNames).contains("_id");
-        return result;
-    }
-});
-
-// XXX With your deny rules, this block is not necessary.
 Contacts.allow({
+
+    // allow if logged In, currentUser and Not blank name and email
     insert: function(userId, contact) {
-        return true;
+        return userId && contact.userId === userId && contact.name.trim() && contact.email.trim();        
     },
 
+    // allow if logged In, and fieldname does not contain an update to _id
     update: function() {
-
-        return true;
+        return userId && !_(fieldNames).contains("_id");
     }
 
 });
 
-//------------ Emails
-Emails.deny({
-
-    insert: function(userId, email) {
-        return (!userId || email.userId !== userId);
-    },
-
-    remove: function () {
-        // XXX this rule is not good enough, who is allowed to do this?
-        return true;
-    },
-
-    update: function() {
-        // XXX this rule is not good enough, who is allowed to do this?
-        return true;
-    }
-
-});
-
-// XXX With your deny rules, this block is not necessary.
 Emails.allow({
+
+    // allow if logged In and email creator is logged In user
     insert: function(userId, email) {
-        return true;
+        return userId && email.userId === userId;
     }
 });

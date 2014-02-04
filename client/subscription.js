@@ -2,8 +2,14 @@
 // subscribe automatically when the user starts out anonymous and then logs in
 // So you have two choices, remove the Meteor.userId() check or put it inside
 // the Deps.autorun() ... choose one and explain your choice. :) 
- if (Meteor.userId()) {
 
-	Meteor.subscribe("contacts");
-	Meteor.subscribe("emails");
-}
+Deps.autorun(function () {
+
+    if (Meteor.userId()) {
+        
+        Meteor.subscribe("contacts");
+        Meteor.subscribe("emails");
+    }
+
+});
+ 

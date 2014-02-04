@@ -9,7 +9,7 @@ Template.verifyEmail.events = {
     "click .btn-primary": function (e, tmpl) {
         e.preventDefault();
 
-        Meteor.call('resendVerifaction');
+        Meteor.call('resendVerification');
 
         alert('Email Sent!');
     }
