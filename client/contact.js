@@ -1,11 +1,23 @@
 'use strict';
 
+var _dep = new Deps.Dependency;
 var Contact = function (id, name, email, tags) {
     
     this._id = id;
     this.name = name;
     this.email = email;
     this.tags = tags;
+
+    this.addTag = function (tag) {
+        this.tags.push(tag);
+        _dep.changed();
+    };
+
+    this.removeTag = function (tag) {
+        var index = this.tags.indexOf(tag);
+        this.tags.splice(index, 1);
+        _dep.changed();
+    };
 
     this.validate = function() {
         var err = [];
@@ -22,27 +34,27 @@ var Contact = function (id, name, email, tags) {
     };
 
     this.save = function (callbackSave) {
-        // validate
+        // validate        
         var err = this.validate();
         if (err) {
             callbackSave.fail (err);
             return;
         }
 
-        // get contactinfo
-        var contactToSave = _(this).pick('name', 'email', 'tags')
+        // get contactinfo        
+        var contactToSave = _.pick(Router.getData(), 'name', 'email', 'tags');
         contactToSave.userId = Meteor.userId();
         
-        // update?
+        // update?        
         if (this._id) {                        
             Contacts.update({_id: this._id}, {$set: contactToSave}, callback.bind(this));
         } else {                        
             Contacts.insert(contactToSave, callback.bind(this));
         }
 
-        function callback (err, result) {
+        function callback (err, result) {            
             if (err) {
-                callback.fail("Could not insert/update contact " + err.reason);
+                callbackSave.fail("Could not insert/update contact " + err.reason);
             }
             else {
                 // success!
@@ -58,9 +70,9 @@ var Contact = function (id, name, email, tags) {
 
         }
 
-
     }
 };
+
 
 
 // XXX - To talk about, file local variables using ReactiveDict
@@ -74,8 +86,13 @@ Template.tags.events = {
             var tagControl = tmpl.find('#tag');
             var newTag = tagControl.value.trim();
             if (newTag) {                
-                this.tags.push(newTag);
+
+                var contact = Router.getData();
+                if (contact.tags) contact.tags.push(newTag);
+                else contact.tags = [newTag];
+
                 tagControl.value = "";
+                _dep.changed();
             }
 
         }
@@ -85,7 +102,8 @@ Template.tags.events = {
         var tag = this.toString();
         var contact = tmpl.data;
 
-        contact.tags.splice(contact.tags.indexOf(tag), 1);
+        contact.tags.splice(contact.tags.indexOf(tag), 1);        
+        _dep.changed();
     }
 
 };
@@ -99,11 +117,11 @@ Template.contact.events = {
         
         var emailControl = tmpl.find("#email");
         var nameControl = tmpl.find("#name");
-
+        
         var contact = new Contact(_this._id, 
                             nameControl.value.trim(),
                             emailControl.value.trim(),
-                            Session.get('currentTags')
+                            _this.tags
             );
         contact.save({
             success: function(msg) {
@@ -135,3 +153,11 @@ Template.contact.rendered = function () {
         }
     });
 };
+
+Template.tags.currentTags = function () {
+    _dep.depend();
+
+    var contact = Router.getData();
+
+    return contact ? contact.tags : [];
+}

@@ -18,7 +18,7 @@ Contacts.allow({
     },
 
     // allow if logged In, and fieldname does not contain an update to _id
-    update: function() {
+    update: function (userId, doc, fieldNames, modifier) {
         return userId && !_(fieldNames).contains("_id");
     }
 
