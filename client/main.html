@@ -9,13 +9,7 @@
 <template name="layout">
     {{> header}}
 
-    {{#if currentUser}}
-      {{#if verifiedEmail}}
-        {{yield}}
-      {{else}}
-        {{> verifyEmail}}
-      {{/if}}
-    {{/if}}
+    {{ yield }}
 
 </template>
 
@@ -40,20 +34,20 @@
         <a class="navbar-brand" href="{{ pathFor 'contacts' }}">Contacts</a>
       </div>
 
+      {{#if currentUser}}
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
             <li class="active"><a href="{{ pathFor 'contact' }}">Add Contact</a></li>
         </ul>
-
         <ul class="nav navbar-nav navbar-right">
           <li>
-                {{ loginButtons align="right"}}
-              
-                
+                <a href='javascript:Meteor.logout()'>Log Out</a>
           </li>
         </ul>
+
       </div><!-- /.navbar-collapse -->
+      {{/if}}
     </nav>    
         
 </template>
