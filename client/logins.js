@@ -8,6 +8,10 @@ var isValidPassword = function(val) {
    return val.length >= 6 ? true : false; 
 }
 
+var verifyEmail = function () { 
+    return Meteor.user().emails[0].verified;
+};
+
   Meteor.autorun(function() {
     // Whenever this session variable changes, run this function.
     var message = Session.get('displayMessage');
@@ -126,3 +130,14 @@ Template.register.events({
       return false; 
       }
   });
+
+Template.verifyEmail.events = {
+    
+    "click .btn-primary": function (e, tmpl) {
+        e.preventDefault();
+
+        Meteor.call('resendVerification');
+
+        alert('Email Sent!');
+    }
+}

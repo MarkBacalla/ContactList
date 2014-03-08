@@ -10,7 +10,7 @@ var IR_Filters = {
     },
     // show login if a guest wants to access private areas
     // Use: {only: [privateAreas] }
-    isLoggedIn: function() {
+    isLoggedIn: function() {        
         if (!(Meteor.loggingIn() || Meteor.user())) {
           //Notify.setError(__('Please login.')); // some custom packages
           this.render('login');
@@ -51,6 +51,14 @@ var IR_Filters = {
     animateContentOut: function() {
         $('#content').removeClass("animated fadeIn fadeInRight");
         $('footer').addClass("hide");
+    },
+
+    isVerified: function () {
+        
+        if(!Meteor.user() || !Meteor.user().emails[0].verified) {
+            this.render('verifyEmail');
+            this.stop();
+        }
     }
 }
 
@@ -73,13 +81,22 @@ Router.map(function() {
 
     this.route("contacts", {
         path: '/',
-        template: 'contactList',
+        template: 'contactList'
     });
 
     this.route("register", {
         path: "/register",
         template: 'register'
-    })
+    });
+
+    this.route("verify", {
+        path: "/verify/:token",
+        action: function () {
+            Accounts.verifyEmail(this.params.token);
+        }
+    });
+
 });
 
-Router.before(IR_Filters.isLoggedIn, { except: ['register']});
+Router.before(IR_Filters.isLoggedIn, { only: ['contacts', 'contact']});
+Router.before(IR_Filters.isVerified , { only: ['contacts', 'contact']});
