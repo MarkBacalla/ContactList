@@ -146,8 +146,7 @@ Template.contact.events = {
 
 }
 
-Template.contact.created = function () {
-    
+Template.contact.created = function () {    
     var data = Router.getData() || {};
     currentContact = new Contact(data._id, data.name, data.email, data.tags);
 };

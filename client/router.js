@@ -1,6 +1,5 @@
+
 // Reference: http://www.manuel-schoebel.com/blog/meteorjs-iron-router-filters-before-and-after-hooks
-
-
 var IR_Filters = {
     // All standard subscriptions you need before anything works
     // the .wait() makes sure that it continues only if the subscription
@@ -57,20 +56,24 @@ var IR_Filters = {
 
 
 Router.configure({
-    layoutTemplate: 'layout'
+    layoutTemplate: 'layout',
+    loadingTemplate: 'loading',
+    waitOn: function () {
+        return Meteor.subscribe('contacts');
+    }
 });
 
 Router.map(function() {
     this.route("contact", {
         path: '/contact/:id?',
-        data: function() {            
+        data: function() {
             return Contacts.findOne({_id: this.params.id });
         }
     });
 
     this.route("contacts", {
         path: '/',
-        template: 'contactList'
+        template: 'contactList',
     });
 
     this.route("register", {

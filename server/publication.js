@@ -1,7 +1,10 @@
 // XXX Love how simple the publications are here, excellent.
 // Publications
-Meteor.publish('contacts', function () {    
-    return Contacts.find({ userId: this.userId });
+Meteor.publish('contacts', function (id) {
+    if (!id)
+        return Contacts.find({ userId: this.userId });
+    else
+        return Contacts.find({ userId: this.userId, _id: id });
 });
 
 Meteor.publish('emails', function () {
