@@ -1,23 +1,37 @@
 'use strict';
 
-var _dep = new Deps.Dependency;
+var currentContact = null;
+
 var Contact = function (id, name, email, tags) {
     
     this._id = id;
     this.name = name;
     this.email = email;
-    this.tags = tags;
+    this.tags = tags || [];
+    this._deps = {
+        tags: new Deps.Dependency
+    };
 
     this.addTag = function (tag) {
         this.tags.push(tag);
-        _dep.changed();
+        this._deps.tags.changed();
     };
 
     this.removeTag = function (tag) {
         var index = this.tags.indexOf(tag);
         this.tags.splice(index, 1);
-        _dep.changed();
+        this._deps.tags.changed();
     };
+
+    this.getTags = function () {
+        this._deps.tags.depend();
+        return this.tags;
+    }
+
+    this.resetTags = function() {
+        this.tags = [];
+        this._deps.tags.changed();
+    }
 
     this.validate = function() {
         var err = [];
@@ -41,8 +55,8 @@ var Contact = function (id, name, email, tags) {
             return;
         }
 
-        // get contactinfo        
-        var contactToSave = _.pick(Router.getData(), 'name', 'email', 'tags');
+        // get contactinfo                
+        var contactToSave = _.pick(this, 'name', 'email', 'tags');
         contactToSave.userId = Meteor.userId();
         
         // update?        
@@ -58,10 +72,9 @@ var Contact = function (id, name, email, tags) {
             }
             else {
                 // success!
-                if (!this._id) {
-                    Session.set('currentTags', []);
+                if (!this._id) {                    
                     callbackSave.success("User Inserted!");
-                    
+                    this.resetTags();
                                         
                 } else {
                     callbackSave.success("User updated!")
@@ -87,12 +100,8 @@ Template.tags.events = {
             var newTag = tagControl.value.trim();
             if (newTag) {                
 
-                var contact = Router.getData();
-                if (contact.tags) contact.tags.push(newTag);
-                else contact.tags = [newTag];
-
+                currentContact.addTag(newTag);
                 tagControl.value = "";
-                _dep.changed();
             }
 
         }
@@ -102,9 +111,8 @@ Template.tags.events = {
         var tag = this.toString();
         var contact = tmpl.data;
 
-        contact.tags.splice(contact.tags.indexOf(tag), 1);        
-        _dep.changed();
-    }
+        currentContact.removeTag(tag);
+    }   
 
 };
 
@@ -117,13 +125,11 @@ Template.contact.events = {
         
         var emailControl = tmpl.find("#email");
         var nameControl = tmpl.find("#name");
-        
-        var contact = new Contact(_this._id, 
-                            nameControl.value.trim(),
-                            emailControl.value.trim(),
-                            _this.tags
-            );
-        contact.save({
+                        
+        currentContact.name = nameControl.value.trim();
+        currentContact.email = emailControl.value.trim();
+
+        currentContact.save({
             success: function(msg) {
                 alert(msg);
                 
@@ -140,6 +146,11 @@ Template.contact.events = {
 
 }
 
+Template.contact.created = function () {
+    
+    var data = Router.getData() || {};
+    currentContact = new Contact(data._id, data.name, data.email, data.tags);
+};
 
 Template.contact.rendered = function () {
     $("#contactForm").validate({
@@ -155,9 +166,6 @@ Template.contact.rendered = function () {
 };
 
 Template.tags.currentTags = function () {
-    _dep.depend();
 
-    var contact = Router.getData();
-
-    return contact ? contact.tags : [];
+    return currentContact.getTags();
 }
